@@ -1,0 +1,36 @@
+ANÁLISE DE PREDITORES PARA A CONVERSÃO MDS → MDT
+3ª VE · Ciência de Dados Geográficos · IME
+1º Ten Irineu · Aluno Baraúna
+Orientadores: Cel Leonardo Moreira · Maj Diego · Colaborador: Ten João Inácio
+
+CONTEÚDO
+
+01_Apresentacao
+  apresentacao_3VE.html   Apresentação (22 slides). Abrir no Chrome ou Edge.
+                          Setas do teclado mudam de slide; tecla F = tela cheia.
+  apresentacao_3VE.pdf    Mesma apresentação em PDF, para leitura ou impressão.
+
+02_Visualizacao_3D
+  erro_MDS_3D_DoisIrmaos.html   Página 3D interativa. Abrir no Chrome ou Edge.
+                                Liga e desliga cada preditor e mostra o erro em cada
+                                célula de 30 m. Passe o mouse nos itens para ver a explicação.
+
+03_Scripts
+  analise.py      Testes de troca e adição de preditores (Random Forest, validação em blocos)
+  combos.py       As 256 combinações dos 8 candidatos (Gradient Boosting)
+  seeds.py        Repetição com sementes diferentes
+  build3d.py      Gera a página 3D (usa help_js.txt = help.js, ctx.py, overlays.py, svgs.py, svgs2.py)
+  A extração das 22 camadas foi feita no Google Earth Engine pelo servidor geeflow.
+
+04_Resultados
+  combinacoes_256.csv   Erro médio absoluto (m) de cada combinação, do menor para o maior
+  res.json              Resultados dos testes de troca/adição, correlações e erro por faixa de dossel
+  toggles.json          Ordem e nomes dos 8 candidatos
+
+05_Dados
+  preditores_SB25YCVI3SOEIV_30m.tif   As 22 camadas na grade de 30 m (EPSG do Copernicus)
+  arquivos osm_*.json                 Bairros e vias usados no mapa de localização
+
+Referência: MDT LiDAR do PE3D (quadrícula SB-25-Y-C-VI-3-SO-E-IV), agregado para 30 m.
+Artigos de base: Uhe et al. (2025), Environ. Res. Lett. 20, 034002; Nunes (IME), Encoder
+Comparison for FathomDEM-based DSM-to-DTM Correction in Northeastern Brazil.
