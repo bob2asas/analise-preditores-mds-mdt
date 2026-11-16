@@ -511,25 +511,6 @@ c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v600 v585 h43z"/></svg></span></span>
   </div>
 </section>
 
-<!-- 16 META -->
-<section class="slide" data-sec="05 · Resultados">
-  <div class="body">
-    <div class="kicker">05 · Resultados parciais</div>
-    <h2>O caso do dossel Meta/WRI</h2>
-    <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:28px;margin-top:26px">
-      <div style="display:flex;flex-direction:column;gap:20px">
-        <div class="card" style="padding:26px 34px"><h4>O que é</h4><p style="font-size:34px">Mapa global de altura das árvores com 1 m de resolução, publicado pela Meta e pelo World Resources Institute (2024). A altura é estimada por um modelo de visão computacional a partir de imagens de satélite de alta resolução.</p></div>
-        <div class="card" style="padding:26px 34px"><h4>Por que é um achado</h4><p style="font-size:34px">No plano, ele substituiria o dossel ETH por ser mais novo e detalhado. O teste mostrou o contrário: a troca <b style="color:var(--red)">aumentou o erro em 4,8%</b>. Somado ao ETH, ele <b style="color:var(--acc)">reduziu 0,20 m</b>, porque melhora a vegetação baixa. Na mata acima de 20 m o erro sobe de 4,2 para 4,5 m.</p></div>
-      </div>
-      <div class="card" style="padding:28px 32px">
-        <h4>Altura média nas manchas de maior erro</h4>
-        <svg id="meta" viewBox="0 0 700 520" width="100%"></svg>
-        <p style="font-size:32px;margin-top:6px;color:var(--mu)">Conclusão: usar o Meta junto com o ETH, e não no lugar dele.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- 17 QUALIDADE -->
 <section class="slide" data-sec="06 · Qualidade">
   <div class="body">
@@ -688,14 +669,7 @@ const f1=v=>v.toFixed(1).replace('.',',');
  [['#a3aba4','6 de referência'],['#3d8f1c','Referência + 8 candidatos']].forEach(([c,t],i)=>{const x0=L+10+i*330;el(s,'rect',{x:x0,y:18,width:30,height:30,rx:6,fill:c});el(s,'text',{x:x0+44,y:43,fill:'#1b221c','font-size':33,'font-weight':600},t);});
 })();
 
-(function(){const s=document.getElementById('meta');
- const D=[["LiDAR",31,'#c4924f'],["ETH",23,'#2f6fd6'],["Meta",7,'#cf3b25']];
- const Bt=440,T=60,y=v=>Bt-(Bt-T)*v/35,bw=150;
- el(s,'line',{x1:30,x2:690,y1:Bt,y2:Bt,stroke:'#9aa39b','stroke-width':2});
- D.forEach(([n,v,c],i)=>{const x0=70+i*210,yy=y(v);el(s,'path',{d:`M${x0} ${Bt}V${yy+4}a4 4 0 0 1 4-4h${bw-8}a4 4 0 0 1 4 4V${Bt}z`,fill:c});
-  el(s,'text',{x:x0+bw/2,y:yy-16,'text-anchor':'middle',fill:'#101510','font-size':44,'font-weight':800},v+' m');
-  el(s,'text',{x:x0+bw/2,y:Bt+50,'text-anchor':'middle',fill:'#1b221c','font-size':37,'font-weight':700},n);});
-})();
+
 
 const S=[...document.querySelectorAll('.slide')],N=S.length;
 S.forEach((s,i)=>{if(i>0){s.insertAdjacentHTML('afterbegin',`<div class="top"><div class="brand"><i></i>MDS → MDT · IME</div><div>${s.dataset.sec}</div><div>3ª VE · Ciência de Dados Geográficos</div></div><div class="foot"><span>Análise de preditores · resultados parciais</span><span><span class="n">${String(i+1).padStart(2,'0')}</span> / ${N}</span></div>`);}
