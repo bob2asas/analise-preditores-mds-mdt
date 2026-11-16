@@ -50,6 +50,11 @@ L=[('BRASIL',-52,-10,0,0.9,13,'#c8c7bf'),('Oceano Atlântico',-38,-27,0,0.9,10,'
  ('Zoo Dois Irmãos',-34.995,-8.0095,2.4,3.1,10,'#cfcec7'),('área 3D',-34.935,-7.982,1.8,3.1,10.5,'#f0efec')]
 for t,lon,lat,a,bb,fs,c in L:
     s.append(f'<text class="lb" data-a="{a}" data-b="{bb}" data-fs="{fs}" x="{X(lon):.3f}" y="{Y(lat):.3f}" fill="{c}" font-weight="600" text-anchor="{"start" if t in ("área 3D","Zoo Dois Irmãos") else ("end" if t=="Olinda" else "middle")}" style="paint-order:stroke;stroke:#0e1012;stroke-width:3px;stroke-linejoin:round">{t}</text>')
+import base64
+from PIL import Image as _I
+_im=_I.open('cgeo.png');_im.thumbnail((92,130));_im.save('cgeo_s.png',optimize=True)
+cg=base64.b64encode(open('cgeo_s.png','rb').read()).decode()
+s.append(f'<image class="emb" data-ax="{X(-34.8625):.3f}" data-ay="{Y(-7.9935):.3f}" data-w="24" data-h="34" data-a="2.3" data-b="3.1" href="data:image/png;base64,{cg}" preserveAspectRatio="xMidYMid meet"><title>3º Centro de Geoinformação (3º CGEO), Olinda</title></image>')
 KF=[(-75,-34,-33,6),(-41.6,-9.7,-34.6,-7.0),(-35.25,-8.25,-34.75,-7.82),(-35.02,-8.08,-34.86,-7.93)]
 kf=[[X((a+c)/2),Y((b+d)/2),max((X(c)-X(a)),(Y(b)-Y(d))*300/281)] for a,b,c,d in KF]
 svg=f'<svg id="zmap" viewBox="0 0 300 281" width="300" height="281" role="img" aria-label="Localização da área de estudo: do Brasil até Recife" style="touch-action:none">'+''.join(s)+'</svg>'
@@ -62,6 +67,7 @@ function view(t){const i=Math.min(2,Math.floor(t)),f=sm(t-i),A=KF[i],B=KF[i+1];c
  svg.querySelectorAll('.pe').forEach(e=>e.style.fillOpacity=Math.max(.15,Math.min(1,1-(t-1)*.85)));
  svg.querySelectorAll('.z1').forEach(e=>e.style.opacity=Math.max(0,Math.min(1,(t-.6)/.5)));
  svg.querySelectorAll('.z2').forEach(e=>e.style.opacity=Math.max(0,Math.min(1,(t-1.6)/.5)));
+ svg.querySelectorAll('.emb').forEach(e=>{const w=e.dataset.w*u,h=e.dataset.h*u,a=+e.dataset.a,b=+e.dataset.b;e.setAttribute('width',w);e.setAttribute('height',h);e.setAttribute('x',e.dataset.ax-w);e.setAttribute('y',+e.dataset.ay);e.style.opacity=Math.max(0,Math.min(1,(t-a+.25)/.25,(b-t+.25)/.25));});
  svg.querySelectorAll('.sc').forEach(e=>e.setAttribute('r',e.dataset.r*u));
  const d=document.getElementById('zmDot'),p=document.getElementById('zmPulse');d.setAttribute('r',4*u);d.style.opacity=t<1.8?1:0;
  p.setAttribute('r',(7+5*Math.sin(performance.now()/300))*u);p.style.opacity=t<1.8?.8:0;
