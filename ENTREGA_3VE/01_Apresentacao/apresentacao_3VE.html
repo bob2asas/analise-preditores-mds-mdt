@@ -78,7 +78,7 @@ ul.clean li::before{content:"";position:absolute;left:0;top:.5em;width:15px;heig
 .node h3{font-size:35px;font-weight:800;line-height:1.15;margin-bottom:8px}
 .node p{font-size:31px;line-height:1.35;color:var(--mu)}
 .refs{list-style:none;counter-reset:none}.refs li{font-size:29px;line-height:1.34;color:#1b221c;margin:0 0 18px;padding-left:66px;position:relative}.refs li::before{content:attr(data-n);position:absolute;left:0;top:0;font-weight:800;color:var(--acc)}
-.cmp{display:grid;grid-template-columns:62px 190px 1fr 1fr;align-items:center;border-bottom:1.5px solid var(--line);padding:9px 0;gap:10px}.cmp:last-child{border:none}.cmp .e{font-size:40px}.cmp b{font-size:30px}.cmp span{font-size:29px;line-height:1.3;color:var(--mu)}.cmp .me{color:var(--tx);font-weight:700}.cmp.h span{font-size:25px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:var(--mu2)}.cmp.h .me{color:var(--acc)}
+.cmp{display:grid;grid-template-columns:70px 230px 1fr 1fr;align-items:center;border-bottom:1.5px solid var(--line);padding:16px 0;gap:10px}.cmp:last-child{border:none}.cmp .e{font-size:40px}.cmp b{font-size:34px}.cmp span{font-size:33px;line-height:1.3;color:var(--mu)}.cmp .me{color:var(--tx);font-weight:700}.cmp.h span{font-size:25px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:var(--mu2)}.cmp.h .me{color:var(--acc)}
 svg text{font-family:Manrope,system-ui,sans-serif}
 </style>
 </head>
@@ -381,15 +381,9 @@ svg text{font-family:Manrope,system-ui,sans-serif}
   <div class="body">
     <div class="kicker">03 · Principais diferenças</div>
     <h2>Modelo de referência × este trabalho</h2>
-    <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:22px">
-      <div class="card" style="padding:14px 26px">
+    <div class="card" style="padding:14px 34px;margin-top:22px">
         <div class="cmp h"><span></span><b></b><span>Nunes (referência)</span><span class="me">Este trabalho</span></div>
         <div class="cmp"><span class="e">🧠</span><b>Modelo</b><span>Rede U-Net + MaxViT</span><span class="me">Gradient Boosting (300 árvores)</span></div><div class="cmp"><span class="e">🗺️</span><b>Área</b><span>Pernambuco inteiro</span><span class="me">1 quadrícula · 3,5 × 2,4 km</span></div><div class="cmp"><span class="e">🌳</span><b>Paisagem</b><span>Caatinga, mata, campo e cidade</span><span class="me">quase só Mata Atlântica alta</span></div><div class="cmp"><span class="e">🧩</span><b>Preditores</b><span>6 do FathomDEM (WSF3D, água)</span><span class="me">5 de referência + 8 candidatos</span></div><div class="cmp"><span class="e">✅</span><b>Validação</b><span>tiles de teste separados</span><span class="me">blocos espaciais de ~500 m</span></div><div class="cmp"><span class="e">⚙️</span><b>Custo</b><span>GPU · ~332 s por época</span><span class="me">CPU · minutos (256 testes)</span></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:18px">
-        <div class="card" style="padding:16px 24px"><h4>Onde comparar é justo</h4><svg viewBox="0 0 700 560" width="100%" style="max-height:430px;display:block;margin:auto" font-family="Manrope,system-ui,sans-serif"><line x1="40.0" y1="20" x2="40.0" y2="440" stroke="#dde3da" stroke-width="2"/><text x="40.0" y="482" text-anchor="middle" font-size="32" fill="#454d46">3 m</text><line x1="240.0" y1="20" x2="240.0" y2="440" stroke="#dde3da" stroke-width="2"/><text x="240.0" y="482" text-anchor="middle" font-size="32" fill="#454d46">3,5 m</text><line x1="440.0" y1="20" x2="440.0" y2="440" stroke="#dde3da" stroke-width="2"/><text x="440.0" y="482" text-anchor="middle" font-size="32" fill="#454d46">4 m</text><line x1="640.0" y1="20" x2="640.0" y2="440" stroke="#dde3da" stroke-width="2"/><text x="640.0" y="482" text-anchor="middle" font-size="32" fill="#454d46">4,5 m</text><text x="40" y="55" font-size="34" font-weight="800" fill="#101510">Nunes · MaxViT</text><rect x="320.00000000000006" y="73" width="159.99999999999977" height="56" rx="10" fill="#2f6fd6"/><text x="493.99999999999983" y="113" text-anchor="start" font-size="34" font-weight="800" fill="#101510">3,7–4,1 m</text><text x="40" y="190" font-size="34" font-weight="800" fill="#101510">Este · referência</text><rect x="440.0" y="208" width="80.0" height="56" rx="10" fill="#a3aba4"/><text x="426.0" y="248" text-anchor="end" font-size="34" font-weight="800" fill="#101510">4,0–4,2 m</text><text x="40" y="325" font-size="34" font-weight="800" fill="#101510">Este · + 8 candidatos</text><rect x="80.00000000000003" y="343" width="240.00000000000003" height="56" rx="10" fill="#3d8f1c"/><text x="334.00000000000006" y="383" text-anchor="start" font-size="34" font-weight="800" fill="#101510">3,1–3,7 m</text><text x="340.0" y="540" text-anchor="middle" font-size="30" fill="#454d46">erro na mata acima de 20 m</text></svg></div>
-        <div class="card mint" style="padding:16px 24px"><p style="font-size:26px">O erro geral não se compara (0,88 m no estado × 1,99 m só em mata). Áreas diferentes: comparação indicativa.</p></div>
-      </div>
     </div>
   </div>
 </section>
