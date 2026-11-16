@@ -81,6 +81,8 @@ select{background:#1f2224;color:var(--t1);border:1px solid var(--border);border-
    <option value="e">Árvores e prédios (MDE LiDAR)</option>
   </select></div>
   <label class="ck"><input type="checkbox" id="cols" checked>Colunas de erro (uma por célula de 30 m)</label>
+  <label class="ck"><input type="checkbox" id="canopy" checked>Copas translúcidas (dossel LiDAR)</label>
+  <label class="ck"><input type="checkbox" id="trees">Árvores: altura LiDAR em pinos</label>
   <label class="ck"><input type="checkbox" id="cop">Superfície Copernicus (malha 30 m)</label>
   <label class="ck"><input type="checkbox" id="ovl" checked>Bairros, BR-101 e nomes</label>
  </div>
@@ -1290,7 +1292,7 @@ function buildSkirt(){const yb=-14;let ymax=0;
  for(let k=0;k<NE;k++){const y=skP[k*6+1],t=Math.min(1,(y-yb)/(ymax-yb+1e-6));const top=TOPC.map((v,j)=>BOTC[j]+(v-BOTC[j])*(0.55+0.45*t));skC.set([...top,...BOTC],k*6);}
  skG.attributes.position.needsUpdate=true;skG.attributes.color.needsUpdate=true;skG.computeVertexNormals();skG.computeBoundingSphere();baseM.position.y=yb;}
 function buildGeom(){const sf=document.getElementById('surf').value==='e'?ze:zt;
- for(let i=0;i<tpos.count;i++)tpos.setY(i,Y(sf(i)));tpos.needsUpdate=true;tg2.computeVertexNormals();buildSkirt();buildOverlays();
+ for(let i=0;i<tpos.count;i++)tpos.setY(i,Y(sf(i)));tpos.needsUpdate=true;tg2.computeVertexNormals();buildSkirt();if(typeof buildCanopy==='function')buildCanopy();buildOverlays();
  const cp=cg.attributes.position;for(let i=0;i<cp.count;i++)cp.setY(i,Y(L.cop_dsm[i]));cp.needsUpdate=true;}
 let curRes=null, anim=null;
 const m4=new THREE.Matrix4(),col=new THREE.Color();
@@ -1340,6 +1342,34 @@ function update(){syncBoxes();curRes=mode==='raw'?rawRes():resid(mask);placeCols
 document.getElementById('errMode').onchange=e=>{mode=e.target.value;update();};
 dsel.onchange=()=>paint(curRes);
 document.getElementById('surf').onchange=()=>{buildGeom();placeCols(curRes);};
+
+// ---------- canopy (translucent crowns) and tree pins from the LiDAR nDSM
+const sprC=document.createElement('canvas');sprC.width=sprC.height=64;{const g=sprC.getContext('2d'),gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.45,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);}
+const sprT=new THREE.CanvasTexture(sprC);
+const canMat=new THREE.PointsMaterial({size:7.5*S*1.6,map:sprT,vertexColors:true,transparent:true,opacity:.5,depthWrite:false,sizeAttenuation:true});
+const canG=new THREE.BufferGeometry(),canopy=new THREE.Points(canG,canMat);canopy.renderOrder=2;scene.add(canopy);
+const pinG=new THREE.BufferGeometry(),pins=new THREE.LineSegments(pinG,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.85}));pins.visible=false;scene.add(pins);
+const tipG=new THREE.BufferGeometry(),tips=new THREE.Points(tipG,new THREE.PointsMaterial({size:2.6*S*1.6,map:sprT,vertexColors:true,transparent:true,depthWrite:false}));tips.visible=false;scene.add(tips);
+let canI=null,canJ=null,canCol=null,pinI=null,pinJ=null;
+const hcol=h=>{const st=[[0.55,0.95,1.0],[0.75,1.0,0.7],[1.0,0.85,0.35],[1.0,0.5,0.2]];return ramp(st,Math.min(1,h/30));};
+function prepCanopy(){const cv=document.createElement('canvas');cv.width=satImg.width;cv.height=satImg.height;const g=cv.getContext('2d');g.drawImage(satImg,0,0);const px=g.getImageData(0,0,cv.width,cv.height).data;
+ const I=[],J=[],C=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+ for(let r=1;r<H3-1;r+=2)for(let c=1;c<W3-1;c+=2){const i=r*W3+c,h=N3[i]/4;if(h<2.5)continue;
+  const u=Math.floor(c/W3*cv.width),v=Math.floor(r/H3*cv.height),o=(v*cv.width+u)*4;const k=1.25;
+  I.push(i);J.push([(rnd()-.5)*4,(rnd()-.5)*4]);C.push(Math.min(1,px[o]/255*k),Math.min(1,px[o+1]/255*k),Math.min(1,px[o+2]/255*k));}
+ canI=I;canJ=J;canCol=new Float32Array(C);canG.setAttribute('color',new THREE.BufferAttribute(canCol,3));
+ const PI=[],PJ=[];for(let r=3;r<H3-3;r+=8)for(let c=3;c<W3-3;c+=8){const rr=r+Math.floor(rnd()*6)-3,cc=c+Math.floor(rnd()*6)-3,i=rr*W3+cc;if(N3[i]/4<4)continue;PI.push(i);}
+ pinI=PI;const pc=new Float32Array(PI.length*6),tc=new Float32Array(PI.length*3);PI.forEach((i,k)=>{const h=N3[i]/4,a=hcol(h);pc.set([a[0]*.75,a[1]*.75,a[2]*.75,...a],k*6);tc.set(a,k*3);});
+ pinG.setAttribute('color',new THREE.BufferAttribute(pc,3));tipG.setAttribute('color',new THREE.BufferAttribute(tc,3));buildCanopy();}
+function buildCanopy(){if(!canI)return;const p=new Float32Array(canI.length*3);
+ for(let k=0;k<canI.length;k++){const i=canI[k],h=N3[i]/4;p[k*3]=tpos.getX(i)+canJ[k][0]*S;p[k*3+1]=Y(zt(i)+h*0.82);p[k*3+2]=tpos.getZ(i)+canJ[k][1]*S;}
+ canG.setAttribute('position',new THREE.BufferAttribute(p,3));canG.computeBoundingSphere();
+ const lp=new Float32Array(pinI.length*6),tp=new Float32Array(pinI.length*3);
+ pinI.forEach((i,k)=>{const x=tpos.getX(i),z=tpos.getZ(i),h=N3[i]/4;lp.set([x,Y(zt(i)),z,x,Y(zt(i)+h),z],k*6);tp.set([x,Y(zt(i)+h),z],k*3);});
+ pinG.setAttribute('position',new THREE.BufferAttribute(lp,3));pinG.computeBoundingSphere();tipG.setAttribute('position',new THREE.BufferAttribute(tp,3));tipG.computeBoundingSphere();}
+if(satImg.complete&&satImg.width)prepCanopy();else satImg.addEventListener('load',prepCanopy);
+document.getElementById('canopy').onchange=e=>canopy.visible=e.target.checked;
+document.getElementById('trees').onchange=e=>{pins.visible=tips.visible=e.target.checked;};
 document.getElementById('cols').onchange=e=>cols.visible=e.target.checked;
 document.getElementById('cop').onchange=e=>copMesh.visible=e.target.checked;
 document.getElementById('exag').oninput=e=>{ex=+e.target.value;buildGeom();placeCols(curRes);};
@@ -1391,6 +1421,8 @@ const CTRL={
  surf:{t:'Superfície do relevo',b:'<b>Terreno</b>: o chão nu do LiDAR (MDT). <b>Árvores e prédios</b>: a superfície do LiDAR (MDE), mostrando a altura real da mata e das construções.'},
  cols:{t:'Colunas de erro',b:'Uma coluna por célula de 30 m. Altura = tamanho do erro; vermelho = estimativa acima do chão, azul = abaixo. Quanto menores e mais claras, melhor a correção.'},
  cop:{t:'Superfície Copernicus',b:'Malha amarela do MDS do Copernicus. Na mata ela flutua acima do chão: essa distância é o erro que o projeto tenta remover.',s:'mdsmdt'},
+ canopy:{t:'Copas translúcidas',b:'Cada ponto suave é um pedaço de copa a cada 6 m, colocado na altura medida pelo LiDAR (MDE − MDT) e pintado com a cor da ortofoto. Mostra onde está a mata alta que o radar confunde com o chão.'},
+ trees:{t:'Árvores em pinos',b:'Um pino a cada ~24 m: vai do chão até o topo da copa medida pelo LiDAR. Cor pela altura: azul-claro baixo, laranja acima de 25 m. É nessas áreas laranja que o erro continua maior.'},
  ovl:{t:'Bairros, BR-101 e nomes',b:'Limites de bairros e rodovia do OpenStreetMap, para localizar a área.'},
  exag:{t:'Exagero vertical',b:'Multiplica as alturas para o relevo e as colunas ficarem visíveis. Não muda nenhum número.'},
  bAnim:{t:'Animar correção',b:'Transforma as colunas do erro do Copernicus bruto no erro depois da correção com os preditores marcados.'}
@@ -1422,7 +1454,7 @@ sel.parentNode.querySelector('span').textContent='Cor do relevo (passe o mouse p
 D.toggles.forEach(([id,name],i)=>{const lab=boxes[i].parentNode;const k=TOG[id];bind(lab,H[k],()=>{const alone=D.mae[1<<i]-D.mae[0];return `Sozinho sobre o base: ${alone>0?'+':''}${fmt(alone,2)} m no erro médio.`});});
 bind(document.querySelector('label.ck.fixed'),CTRL.base,`Erro médio só com o base: ${fmt(D.mae[0],2)} m.`);
 [['errMode','errMode'],['surf','surf'],['exag','exag']].forEach(([id,k])=>bind(document.getElementById(id).parentNode,CTRL[k]));
-['cols','cop','ovl'].forEach(id=>bind(document.getElementById(id).parentNode,CTRL[id]));
+['cols','canopy','trees','cop','ovl'].forEach(id=>bind(document.getElementById(id).parentNode,CTRL[id]));
 bind(document.getElementById('bAnim'),CTRL.bAnim);
 })();
 

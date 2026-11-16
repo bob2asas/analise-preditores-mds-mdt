@@ -24,6 +24,8 @@ const CTRL={
  surf:{t:'Superfície do relevo',b:'<b>Terreno</b>: o chão nu do LiDAR (MDT). <b>Árvores e prédios</b>: a superfície do LiDAR (MDE), mostrando a altura real da mata e das construções.'},
  cols:{t:'Colunas de erro',b:'Uma coluna por célula de 30 m. Altura = tamanho do erro; vermelho = estimativa acima do chão, azul = abaixo. Quanto menores e mais claras, melhor a correção.'},
  cop:{t:'Superfície Copernicus',b:'Malha amarela do MDS do Copernicus. Na mata ela flutua acima do chão: essa distância é o erro que o projeto tenta remover.',s:'mdsmdt'},
+ canopy:{t:'Copas translúcidas',b:'Cada ponto suave é um pedaço de copa a cada 6 m, colocado na altura medida pelo LiDAR (MDE − MDT) e pintado com a cor da ortofoto. Mostra onde está a mata alta que o radar confunde com o chão.'},
+ trees:{t:'Árvores em pinos',b:'Um pino a cada ~24 m: vai do chão até o topo da copa medida pelo LiDAR. Cor pela altura: azul-claro baixo, laranja acima de 25 m. É nessas áreas laranja que o erro continua maior.'},
  ovl:{t:'Bairros, BR-101 e nomes',b:'Limites de bairros e rodovia do OpenStreetMap, para localizar a área.'},
  exag:{t:'Exagero vertical',b:'Multiplica as alturas para o relevo e as colunas ficarem visíveis. Não muda nenhum número.'},
  bAnim:{t:'Animar correção',b:'Transforma as colunas do erro do Copernicus bruto no erro depois da correção com os preditores marcados.'}
@@ -55,6 +57,6 @@ sel.parentNode.querySelector('span').textContent='Cor do relevo (passe o mouse p
 D.toggles.forEach(([id,name],i)=>{const lab=boxes[i].parentNode;const k=TOG[id];bind(lab,H[k],()=>{const alone=D.mae[1<<i]-D.mae[0];return `Sozinho sobre o base: ${alone>0?'+':''}${fmt(alone,2)} m no erro médio.`});});
 bind(document.querySelector('label.ck.fixed'),CTRL.base,`Erro médio só com o base: ${fmt(D.mae[0],2)} m.`);
 [['errMode','errMode'],['surf','surf'],['exag','exag']].forEach(([id,k])=>bind(document.getElementById(id).parentNode,CTRL[k]));
-['cols','cop','ovl'].forEach(id=>bind(document.getElementById(id).parentNode,CTRL[id]));
+['cols','canopy','trees','cop','ovl'].forEach(id=>bind(document.getElementById(id).parentNode,CTRL[id]));
 bind(document.getElementById('bAnim'),CTRL.bAnim);
 })();
