@@ -1,3 +1,8 @@
+# =====================================================================
+# seeds.py — teste de estabilidade
+# Repete os experimentos com sementes aleatórias diferentes para mostrar que
+# os ganhos não são sorte do sorteio (variação < 0,5 ponto percentual).
+# =====================================================================
 exec(open('analise.py').read().split("res={}")[0])
 import json
 BASE=['cop_dsm','s1_vh','eth_ch','ghs_bh','lc100_tree']

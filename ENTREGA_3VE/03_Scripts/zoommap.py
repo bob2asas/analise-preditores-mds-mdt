@@ -1,3 +1,9 @@
+# =====================================================================
+# zoommap.py — mapa "Onde fica" com zoom do Brasil até a área
+# Usa os limites FAO GAUL (Brasil, estados, municípios de PE), os bairros e
+# vias do OpenStreetMap e o emblema do 3º CGEO (cgeo.png) para gerar um mapa
+# SVG com 4 níveis de aproximação: Brasil → Pernambuco → Recife → Área 3D.
+# =====================================================================
 import json, pickle, math
 from shapely.geometry import box, shape, Polygon, MultiPolygon
 G=json.load(open('/mnt/user-data/uploads/CDG -TRABALHO/analise_preditores/gaul_contexto.json'))

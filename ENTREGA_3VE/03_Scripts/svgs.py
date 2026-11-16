@@ -1,3 +1,8 @@
+# =====================================================================
+# svgs.py — diagramas das caixas de ajuda (parte 1)
+# Desenha os esquemas que aparecem ao passar o mouse na página 3D:
+# radar e penetração na copa, GEM-15, MDS × MDT e rugosidade. Saída: svgs.json
+# =====================================================================
 import json
 def crowns(xs,y,r,col='#2f7d4f',dark='#256b42'):
     return ''.join(f'<circle cx="{x}" cy="{y+(i%2)*6}" r="{r}" fill="{col if i%2 else dark}"/>' for i,x in enumerate(xs))

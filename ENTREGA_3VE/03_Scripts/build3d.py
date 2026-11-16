@@ -1,3 +1,11 @@
+# =====================================================================
+# build3d.py — montador da página 3D
+# Junta relevo LiDAR (3 m), altura das árvores, ortofoto, os erros das 256
+# combinações, os mapas dos preditores, bairros/vias e o mapa de localização
+# num único HTML que funciona sem internet:
+#   02_Visualizacao_3D/erro_MDS_3D_DoisIrmaos.html
+# Uso: python3 build3d.py <ortofoto.png>
+# =====================================================================
 import json, numpy as np, base64
 W='/home/claude/work/'
 b64=lambda a: base64.b64encode(np.ascontiguousarray(a).tobytes()).decode()

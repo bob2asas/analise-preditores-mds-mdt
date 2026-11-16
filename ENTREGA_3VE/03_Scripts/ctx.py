@@ -1,3 +1,9 @@
+# =====================================================================
+# ctx.py — onde fica a área de estudo
+# Cruza a quadrícula com os bairros do OpenStreetMap para calcular quanto da
+# área cai em cada bairro (61% Guabiraba, 17% Dois Irmãos, 18% Aldeia) e mede
+# a distância até o Zoológico. Salva tudo em ctx.pkl para os outros scripts.
+# =====================================================================
 import json, numpy as np
 from shapely.geometry import LineString, Polygon, box, mapping, MultiLineString
 from shapely.ops import linemerge, polygonize, unary_union, transform

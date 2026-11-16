@@ -1,3 +1,13 @@
+# =====================================================================
+# analise.py — 1º passo da análise (Random Forest)
+# Lê as 22 camadas (05_Dados/preditores_...tif) e o MDT LiDAR do PE3D em 30 m,
+# calcula o alvo Δh = MDS Copernicus − MDT LiDAR e testa os preditores:
+#   • modelo base (preditores do FathomDEM);
+#   • TROCA de um preditor por um candidato (ex.: Meta no lugar do ETH);
+#   • ADIÇÃO de cada candidato ao modelo base;
+#   • correlação de cada camada com o erro, erro por altura do dossel e viés em área aberta.
+# Validação cruzada em blocos espaciais (GroupKFold). Saída: 04_Resultados/res.json
+# =====================================================================
 import rasterio, numpy as np, json, warnings
 from scipy.stats import spearmanr
 from sklearn.ensemble import RandomForestRegressor

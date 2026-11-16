@@ -1,3 +1,9 @@
+# =====================================================================
+# overlays.py — contexto desenhado sobre o 3D
+# Converte bairros, BR-101/avenidas e o zoológico (arquivos osm_ do
+# OpenStreetMap) para as coordenadas da cena 3D e gera o mapa simples
+# de localização (inset.svg).
+# =====================================================================
 import json, pickle, numpy as np
 from shapely.geometry import LineString, box, Point, MultiLineString
 from shapely.ops import transform, unary_union

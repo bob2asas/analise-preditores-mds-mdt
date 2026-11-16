@@ -1,3 +1,10 @@
+# =====================================================================
+# combos.py — as 256 combinações dos 8 candidatos (Gradient Boosting)
+# Reaproveita a leitura de dados do analise.py e treina um modelo para cada
+# combinação possível (2^8 = 256) dos candidatos somados ao modelo base,
+# com validação em blocos espaciais. Guarda o erro de cada célula em cada
+# combinação: é a base da página 3D e do 04_Resultados/combinacoes_256.csv.
+# =====================================================================
 exec(open('analise.py').read().split("res={}")[0])
 import itertools, json, time
 from sklearn.ensemble import HistGradientBoostingRegressor

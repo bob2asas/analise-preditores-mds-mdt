@@ -1,3 +1,8 @@
+# =====================================================================
+# svgs2.py — diagramas das caixas de ajuda (parte 2)
+# Esquemas de Hansen, declividade, MapBiomas, dossel Meta e HEM.
+# Acrescenta os desenhos ao svgs.json.
+# =====================================================================
 import json
 T='font-family="system-ui,Segoe UI,sans-serif"'
 def tree(x,y,h,r=12):  # trunk base at y, height h
